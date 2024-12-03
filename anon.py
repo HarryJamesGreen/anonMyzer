@@ -24,12 +24,16 @@ def spinner(task_description):
     """Show a loading spinner during long tasks."""
     done = False
     spinner_cycle = cycle(["|", "/", "-", "\\"])
+
     def spinning():
+        nonlocal done  # Use nonlocal to modify the `done` variable in the outer function scope
         while not done:
             sys.stdout.write(f"\r{Fore.LIGHTCYAN_EX}[INFO] {task_description}... {next(spinner_cycle)}{Style.RESET_ALL}")
             sys.stdout.flush()
             time.sleep(0.1)
-    Thread(target=spinning).start()
+
+    thread = Thread(target=spinning)
+    thread.start()
     return lambda: setattr(locals(), "done", True)
 
 # Utility Functions
